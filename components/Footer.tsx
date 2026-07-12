@@ -83,9 +83,6 @@ export function Footer() {
               <a href="https://www.facebook.com/share/183CzpYYer/" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center text-white/50 hover:text-orange-400 hover:border-orange-400/50 hover:bg-orange-400/10 transition-all">
                 <Facebook size={18} />
               </a>
-              <a href="#" className="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center text-white/50 hover:text-orange-400 hover:border-orange-400/50 hover:bg-orange-400/10 transition-all">
-                <Youtube size={18} />
-              </a>
             </div>
             <p className="text-white/30 text-xs mt-4">Owner: <a href="https://instagram.com/abhinavshukla_.1" target="_blank" className="hover:text-orange-400">@abhinavshukla_.1</a></p>
           </div>
