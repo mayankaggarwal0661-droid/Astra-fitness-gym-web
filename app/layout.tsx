@@ -24,7 +24,7 @@ export const metadata: Metadata = {
     siteName: 'ASTRA Fitness Gym',
     images: [
       {
-        url: '/api/gym-image/1',
+        url: '/gallery-1.jpg',
         width: 1200,
         height: 630,
         alt: 'ASTRA Fitness Gym Interior',
@@ -37,7 +37,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'ASTRA FITNESS GYM | Haridwar',
     description: 'The ultimate luxury fitness destination in Haridwar. Join ASTRA today.',
-    images: ['/api/gym-image/1'],
+    images: ['/gallery-1.jpg'],
   },
   robots: {
     index: true,
