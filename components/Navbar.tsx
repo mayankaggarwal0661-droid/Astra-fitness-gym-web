@@ -16,13 +16,31 @@ export function Navbar() {
   }, [])
 
   const navLinks = [
-    { label: 'About',      href: '#about' },
-    { label: 'Motivation', href: '#motivation' },
-    { label: 'BMI',        href: '#bmi' },
-    { label: 'Membership', href: '#membership' },
-    { label: 'Gallery',    href: '#gallery' },
-    { label: 'Contact',    href: '#contact' },
+    { label: 'About',      href: '/#about' },
+    { label: 'Motivation', href: '/#motivation' },
+    { label: 'BMI',        href: '/#bmi' },
+    { label: 'Membership', href: '/#membership' },
+    { label: 'Gallery',    href: '/#gallery' },
+    { label: 'Contact',    href: '/#contact' },
   ]
+
+  const handleScroll = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+    // Only handle smooth scroll if we are already on the home page
+    if (window.location.pathname === '/' && href.startsWith('/#')) {
+      e.preventDefault()
+      const targetId = href.substring(2) // remove '/#'
+      const elem = document.getElementById(targetId)
+      if (elem) {
+        const y = elem.getBoundingClientRect().top + window.scrollY - 72 // 72px offset for navbar
+        window.scrollTo({ top: y, behavior: 'smooth' })
+        setIsOpen(false)
+        window.history.pushState(null, '', href)
+      }
+    } else {
+      // If navigating to another page, just close the menu and let default behavior happen
+      setIsOpen(false)
+    }
+  }
 
   const portalLinks = [
     { label: 'Member', href: '/member', color: '#a78bfa' },
@@ -87,6 +105,7 @@ export function Navbar() {
               <a
                 key={link.label}
                 href={link.href}
+                onClick={(e) => handleScroll(e, link.href)}
                 className="relative text-white/45 hover:text-white text-[11px] font-bold uppercase tracking-[0.18em] transition-colors duration-200 group py-1"
               >
                 {link.label}
@@ -98,7 +117,8 @@ export function Navbar() {
             ))}
 
             <a
-              href="#membership"
+              href="/#membership"
+              onClick={(e) => handleScroll(e, '/#membership')}
               className="relative inline-flex items-center gap-2 px-6 py-2.5 text-white text-[11px] font-bold uppercase tracking-widest overflow-hidden transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-orange-500/30 ml-2"
               style={{
                 background: 'linear-gradient(135deg,#ff6600,#ff3300)',
@@ -188,7 +208,7 @@ export function Navbar() {
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: i * 0.06, duration: 0.3 }}
                   className="flex items-center gap-3 text-white/50 hover:text-white text-[11px] font-bold uppercase tracking-[0.22em] py-3 border-b border-white/[0.04] hover:border-orange-500/20 transition-all group"
-                  onClick={() => setIsOpen(false)}
+                  onClick={(e) => handleScroll(e, link.href)}
                 >
                   <span
                     className="w-4 h-[1.5px] rounded group-hover:w-6 transition-all duration-300"
@@ -205,14 +225,14 @@ export function Navbar() {
                 className="pt-4"
               >
                 <a
-                  href="#membership"
+                  href="/#membership"
+                  onClick={(e) => handleScroll(e, '/#membership')}
                   className="flex items-center justify-center gap-2 py-3.5 text-white text-[11px] font-bold uppercase tracking-widest w-full"
                   style={{
                     background: 'linear-gradient(135deg,#ff6600,#ff3300)',
                     clipPath: 'polygon(0 0,calc(100% - 10px) 0,100% 10px,100% 100%,10px 100%,0 calc(100% - 10px))',
                     boxShadow: '0 0 24px rgba(255,80,0,0.3)',
                   }}
-                  onClick={() => setIsOpen(false)}
                 >
                   🔥 Join ASTRA Now
                 </a>
