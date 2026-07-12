@@ -7,6 +7,7 @@ import { MembershipPlans } from '@/components/MembershipPlans'
 import { Gallery } from '@/components/Gallery'
 import { ReviewsSection } from '@/components/ReviewsSection'
 import { Footer } from '@/components/Footer'
+import ActiveOfferWidget from '@/components/ActiveOfferWidget'
 
 export default function Home() {
   return (
@@ -20,6 +21,7 @@ export default function Home() {
       <Gallery />
       <ReviewsSection />
       <Footer />
+      <ActiveOfferWidget />
     </main>
   )
 }

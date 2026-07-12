@@ -63,6 +63,20 @@ export function setOwnerPhone(phone: string): void {
   localStorage.setItem(OWNER_PHONE_KEY, phone)
 }
 
+const OFFER_KEY = 'astra_active_offer'
+export function getActiveOffer(): string | null {
+  if (typeof window === 'undefined') return null
+  return localStorage.getItem(OFFER_KEY)
+}
+
+export function setActiveOffer(offer: string | null): void {
+  if (!offer) {
+    localStorage.removeItem(OFFER_KEY)
+  } else {
+    localStorage.setItem(OFFER_KEY, offer)
+  }
+}
+
 export function getMembers(): Member[] {
   if (typeof window === 'undefined') return []
   const raw = localStorage.getItem(MEMBERS_KEY)

@@ -4,12 +4,14 @@ import { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import {
   Users, Plus, Trash2, Search, Bell, LogOut, Eye, CreditCard,
-  AlertTriangle, CheckCircle, X, IndianRupee, RefreshCw, Settings
+  AlertTriangle, CheckCircle, X, IndianRupee, RefreshCw, Settings,
+  Tag, Image as ImageIcon
 } from 'lucide-react'
 import {
   getMembers, addMember, deleteMember, updateMember, checkOwnerPassword,
   addPayment, getPayments, calcEndDate, daysLeft, isExpiringSoon, isExpired,
   calcBMI, bmiCategory, seedDemoData, setOwnerPassword, getOwnerPhone, setOwnerPhone,
+  getActiveOffer, setActiveOffer,
   type Member, type MembershipType, type PaymentMode, type Goal, type Gender
 } from '@/lib/gymData'
 
@@ -51,6 +53,10 @@ export default function AdminPage() {
   const [confirmPass, setConfirmPass]   = useState('')
   const [recoveryPhone, setRecoveryPhone] = useState('')
 
+  // Offer State
+  const [showOfferModal, setShowOfferModal] = useState(false)
+  const [activeOffer, setActiveOfferState]  = useState<string | null>(null)
+
   // Forgot Password State
   const [showForgot, setShowForgot]     = useState(false)
   const [forgotStep, setForgotStep]     = useState<'phone' | 'otp' | 'newpass'>('phone')
@@ -67,6 +73,7 @@ export default function AdminPage() {
       seedDemoData()
       reload() 
       setRecoveryPhone(getOwnerPhone())
+      setActiveOfferState(getActiveOffer())
     }
   }, [authed])
 
@@ -299,11 +306,14 @@ export default function AdminPage() {
                 <span className="text-orange-400 text-xs font-bold">{stats.expiring} expiring soon</span>
               </div>
             )}
-            <button onClick={() => setShowSettings(true)} className="flex items-center gap-1.5 text-white/40 hover:text-white text-xs transition-colors border-r border-white/10 pr-3 mr-1">
-              <Settings size={14} /> Settings
+            <button onClick={() => setShowOfferModal(true)} className="p-2 rounded-full border border-white/[0.06] text-white/40 hover:text-white transition-colors bg-white/[0.02]">
+              <Tag size={18} />
             </button>
-            <button onClick={() => setAuthed(false)} className="flex items-center gap-1.5 text-white/40 hover:text-white text-xs transition-colors">
-              <LogOut size={14} /> Logout
+            <button onClick={() => setShowSettings(true)} className="p-2 rounded-full border border-white/[0.06] text-white/40 hover:text-white transition-colors bg-white/[0.02]">
+              <Settings size={18} />
+            </button>
+            <button onClick={() => setAuthed(false)} className="p-2 rounded-full border border-white/[0.06] text-white/40 hover:text-white transition-colors bg-white/[0.02]">
+              <LogOut size={18} />
             </button>
           </div>
         </div>
@@ -845,6 +855,68 @@ export default function AdminPage() {
                   Save Settings
                 </button>
               </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* ── OFFER MODAL ── */}
+      <AnimatePresence>
+        {showOfferModal && (
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[100] flex items-center justify-center p-4"
+            style={{ background: 'rgba(0,0,0,0.88)', backdropFilter: 'blur(8px)' }}
+            onClick={() => setShowOfferModal(false)}>
+            <motion.div initial={{ scale: 0.9 }} animate={{ scale: 1 }} exit={{ scale: 0.9 }}
+              className="w-full max-w-sm rounded-2xl border border-white/[0.08] p-6"
+              style={{ background: '#0a0502' }}
+              onClick={e => e.stopPropagation()}>
+              <div className="flex items-center justify-between mb-6">
+                <h3 className="text-white font-black text-xl flex items-center gap-2" style={{ fontFamily: "'Barlow Condensed',sans-serif" }}>
+                  <Tag size={18} className="text-orange-500" /> Manage Offer
+                </h3>
+                <button onClick={() => setShowOfferModal(false)} className="text-white/40 hover:text-white"><X size={18} /></button>
+              </div>
+
+              <div className="mb-6">
+                <p className="text-white/50 text-sm mb-4">Upload an offer image to display globally on the main website.</p>
+                {activeOffer ? (
+                  <div className="relative rounded-xl border border-white/[0.1] overflow-hidden bg-black/50 aspect-video mb-4">
+                    <img src={activeOffer} alt="Active Offer" className="w-full h-full object-contain" />
+                    <button onClick={() => { setActiveOffer(null); setActiveOfferState(null); showToast('🗑️ Offer removed') }}
+                      className="absolute top-2 right-2 p-1.5 bg-red-500/80 text-white rounded-lg hover:bg-red-500 transition-colors">
+                      <Trash2 size={14} />
+                    </button>
+                  </div>
+                ) : (
+                  <div className="rounded-xl border border-dashed border-white/[0.2] bg-white/[0.02] aspect-video flex flex-col items-center justify-center text-white/30 mb-4 p-4 text-center">
+                    <ImageIcon size={32} className="mb-2 opacity-50" />
+                    <p className="text-xs font-semibold">No active offer</p>
+                    <p className="text-[10px] mt-1">Upload an image below to display it to visitors.</p>
+                  </div>
+                )}
+                
+                <label className="text-white/40 text-xs uppercase tracking-wide font-bold mb-1.5 block">Upload New Offer Image</label>
+                <input type="file" accept="image/*"
+                  onChange={e => {
+                    const file = e.target.files?.[0]
+                    if (!file) return
+                    const reader = new FileReader()
+                    reader.onload = (ev) => {
+                      const res = ev.target?.result as string
+                      setActiveOffer(res)
+                      setActiveOfferState(res)
+                      showToast('✅ New offer is now live!')
+                    }
+                    reader.readAsDataURL(file)
+                  }}
+                  className="w-full px-3 py-2 rounded-xl border border-white/[0.07] bg-white/[0.03] text-white text-xs outline-none file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-orange-500/20 file:text-orange-400 hover:file:bg-orange-500/30"
+                />
+              </div>
+
+              <button onClick={() => setShowOfferModal(false)} className="w-full py-3 rounded-xl border border-white/[0.07] text-white/50 text-sm font-semibold hover:border-white/20">
+                Close
+              </button>
             </motion.div>
           </motion.div>
         )}

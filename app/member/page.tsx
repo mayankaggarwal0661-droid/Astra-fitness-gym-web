@@ -9,7 +9,7 @@ import {
 import {
   getMemberByPhone, updateMember, daysLeft, isExpiringSoon, isExpired,
   calcBMI, bmiCategory, generateDietPlan, seedDemoData,
-  type Member
+  type Member, type Goal
 } from '@/lib/gymData'
 
 const GOAL_LABELS: Record<string, string> = {
@@ -37,6 +37,10 @@ export default function MemberPage() {
   const [editWeight, setEditWeight] = useState('')
   const [editFt, setEditFt] = useState('')
   const [editIn, setEditIn] = useState('')
+
+  // Update Goal State
+  const [showGoalEdit, setShowGoalEdit] = useState(false)
+  const [editGoal, setEditGoal] = useState<Goal>('weight_loss')
 
 
   useEffect(() => { 
@@ -75,6 +79,13 @@ export default function MemberPage() {
     const m = getMemberByPhone(member!.phone)
     if (m) setMember(m)
     setShowEdit(false)
+  }
+
+  function handleUpdateGoal() {
+    updateMember(member!.id, { goal: editGoal })
+    const m = getMemberByPhone(member!.phone)
+    if (m) setMember(m)
+    setShowGoalEdit(false)
   }
 
 
@@ -324,6 +335,34 @@ export default function MemberPage() {
                   <div className="flex gap-2">
                     <button onClick={() => setShowEdit(false)} className="flex-1 py-2 rounded-lg border border-white/[0.07] text-white/50 text-xs font-semibold">Cancel</button>
                     <button onClick={handleUpdateMetrics} className="flex-1 py-2 rounded-lg text-white text-xs font-bold" style={{ background: 'linear-gradient(135deg,#ff6600,#ff3300)' }}>Save Metrics</button>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Update Goal */}
+            <div className="mt-3">
+              {!showGoalEdit ? (
+                <button onClick={() => {
+                  setEditGoal(member.goal)
+                  setShowGoalEdit(true)
+                }} className="w-full py-3 rounded-xl border border-white/[0.07] text-white/60 text-sm font-semibold hover:border-white/20 transition-all flex items-center justify-center gap-2">
+                  <Flame size={14} /> Change Fitness Goal
+                </button>
+              ) : (
+                <div className="p-4 rounded-2xl border border-orange-500/30" style={{ background: 'rgba(255,100,0,0.05)' }}>
+                  <p className="text-white font-bold text-sm mb-3">Select New Goal</p>
+                  <div className="mb-4">
+                    <select value={editGoal} onChange={e => setEditGoal(e.target.value as Goal)} 
+                      className="w-full bg-white/[0.03] border border-white/[0.06] rounded-lg px-3 py-2.5 text-white text-sm outline-none focus:border-orange-500/50 appearance-none">
+                      {Object.entries(GOAL_LABELS).map(([k, v]) => (
+                        <option key={k} value={k} className="bg-black text-white">{v}</option>
+                      ))}
+                    </select>
+                  </div>
+                  <div className="flex gap-2">
+                    <button onClick={() => setShowGoalEdit(false)} className="flex-1 py-2 rounded-lg border border-white/[0.07] text-white/50 text-xs font-semibold">Cancel</button>
+                    <button onClick={handleUpdateGoal} className="flex-1 py-2 rounded-lg text-white text-xs font-bold" style={{ background: 'linear-gradient(135deg,#ff6600,#ff3300)' }}>Save Goal</button>
                   </div>
                 </div>
               )}
