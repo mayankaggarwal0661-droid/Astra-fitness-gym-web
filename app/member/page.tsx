@@ -38,12 +38,6 @@ export default function MemberPage() {
   const [editFt, setEditFt] = useState('')
   const [editIn, setEditIn] = useState('')
 
-  // AI Chat State
-  const [chatPrompt, setChatPrompt] = useState('')
-  const [chatLog, setChatLog] = useState<{role: 'user'|'ai', text: string}[]>([
-    { role: 'ai', text: "What's up warrior? I'm your AI Nutritionist. Need a custom meal plan or have a diet question? Ask away!" }
-  ])
-  const [isTyping, setIsTyping] = useState(false)
 
   useEffect(() => { 
     seedDemoData() 
@@ -83,27 +77,6 @@ export default function MemberPage() {
     setShowEdit(false)
   }
 
-  async function handleChat(e: React.FormEvent) {
-    e.preventDefault()
-    if (!chatPrompt.trim() || isTyping) return
-    const userText = chatPrompt.trim()
-    setChatLog(prev => [...prev, { role: 'user', text: userText }])
-    setChatPrompt('')
-    setIsTyping(true)
-    
-    try {
-      const res = await fetch('/api/ai-diet', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ prompt: userText, goal: member!.goal, weight: member!.weight })
-      })
-      const data = await res.json()
-      setChatLog(prev => [...prev, { role: 'ai', text: data.reply }])
-    } catch (err) {
-      setChatLog(prev => [...prev, { role: 'ai', text: "Server's too heavy right now, try again." }])
-    }
-    setIsTyping(false)
-  }
 
   if (!member) return (
     <div className="min-h-screen flex items-center justify-center px-4"
@@ -426,54 +399,6 @@ export default function MemberPage() {
         {activeTab === 'diet' && (
           <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-4">
             
-            {/* AI Nutritionist Chat */}
-            <div className="rounded-2xl border border-orange-500/30 overflow-hidden flex flex-col shadow-[0_0_30px_rgba(255,100,0,0.05)]" style={{ background: '#0a0502' }}>
-              <div className="p-4 border-b border-white/[0.05]" style={{ background: 'linear-gradient(135deg,rgba(255,100,0,0.1),rgba(255,50,0,0.05))' }}>
-                <h3 className="text-orange-500 font-black text-lg flex items-center gap-2 uppercase tracking-wide" style={{ fontFamily: "'Barlow Condensed',sans-serif" }}>
-                  <Sparkles size={16} /> AI Nutritionist
-                </h3>
-                <p className="text-white/40 text-xs mt-0.5">Your personal 24/7 gym-bro dietitian</p>
-              </div>
-              
-              <div className="p-4 max-h-64 overflow-y-auto space-y-3" style={{ scrollBehavior: 'smooth' }}>
-                {chatLog.map((msg, i) => (
-                  <div key={i} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
-                    <div className={`max-w-[85%] rounded-2xl px-4 py-2.5 text-sm ${msg.role === 'user' ? 'bg-orange-600 text-white rounded-br-sm' : 'bg-white/[0.05] text-white/80 rounded-bl-sm border border-white/10'}`}>
-                      {msg.text}
-                    </div>
-                  </div>
-                ))}
-                {isTyping && (
-                  <div className="flex justify-start">
-                    <div className="bg-white/[0.05] border border-white/10 rounded-2xl rounded-bl-sm px-4 py-3">
-                      <div className="flex gap-1">
-                        <motion.div className="w-1.5 h-1.5 rounded-full bg-orange-500" animate={{ y: [0, -4, 0] }} transition={{ repeat: Infinity, duration: 0.6, delay: 0 }} />
-                        <motion.div className="w-1.5 h-1.5 rounded-full bg-orange-500" animate={{ y: [0, -4, 0] }} transition={{ repeat: Infinity, duration: 0.6, delay: 0.2 }} />
-                        <motion.div className="w-1.5 h-1.5 rounded-full bg-orange-500" animate={{ y: [0, -4, 0] }} transition={{ repeat: Infinity, duration: 0.6, delay: 0.4 }} />
-                      </div>
-                    </div>
-                  </div>
-                )}
-              </div>
-              
-              <form onSubmit={handleChat} className="p-3 border-t border-white/[0.05] flex gap-2" style={{ background: 'rgba(255,255,255,0.02)' }}>
-                <input 
-                  type="text" 
-                  value={chatPrompt} 
-                  onChange={e => setChatPrompt(e.target.value)} 
-                  placeholder="Ask for a vegetarian meal plan..." 
-                  className="flex-1 bg-white/[0.03] border border-white/10 rounded-xl px-4 py-2 text-white text-sm outline-none focus:border-orange-500/50"
-                />
-                <button 
-                  type="submit" 
-                  disabled={isTyping || !chatPrompt.trim()} 
-                  className="w-10 h-10 rounded-xl flex items-center justify-center text-white shrink-0 disabled:opacity-50"
-                  style={{ background: 'linear-gradient(135deg,#ff6600,#ff3300)' }}
-                >
-                  <Send size={16} />
-                </button>
-              </form>
-            </div>
 
             {/* Macros */}
             <div className="rounded-2xl border border-white/[0.06] p-5" style={{ background: 'rgba(255,255,255,0.02)' }}>
