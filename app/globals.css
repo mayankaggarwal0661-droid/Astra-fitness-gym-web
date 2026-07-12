@@ -1,0 +1,125 @@
+@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800;900&family=Inter:wght@300;400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 20 14% 4%;
+    --foreground: 40 10% 95%;
+    --card: 20 14% 8%;
+    --card-foreground: 40 10% 95%;
+    --primary: 25 95% 53%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 20 14% 12%;
+    --secondary-foreground: 40 10% 95%;
+    --muted: 20 14% 15%;
+    --muted-foreground: 40 5% 60%;
+    --accent: 25 95% 53%;
+    --accent-foreground: 0 0% 100%;
+    --border: 20 14% 18%;
+    --input: 20 14% 15%;
+    --ring: 25 95% 53%;
+    --radius: 0.75rem;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-family: 'Inter', sans-serif;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+  h1, h2, h3 {
+    font-family: 'Barlow Condensed', sans-serif;
+  }
+}
+
+@layer utilities {
+  .gradient-orange {
+    background: linear-gradient(135deg, hsl(25, 95%, 53%) 0%, hsl(40, 95%, 60%) 100%);
+  }
+  .gradient-text {
+    background: linear-gradient(135deg, hsl(25, 95%, 53%) 0%, hsl(40, 95%, 60%) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .card-hover {
+    @apply transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-primary/20;
+  }
+  .glass {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: hsl(var(--background));
+}
+
+::-webkit-scrollbar-thumb {
+  background: hsl(var(--primary));
+  border-radius: 3px;
+}
+
+/* ── 3D / 4D Hero Animations ── */
+@keyframes tailWave {
+  0%   { d: path("M 150 280 Q 80 200 120 120 Q 160 40 200 10 Q 230 -10 250 20"); }
+  33%  { d: path("M 150 280 Q 100 190 130 100 Q 175 20 225 -8 Q 258 -22 268 14"); }
+  66%  { d: path("M 150 280 Q 55 210 105 125 Q 148 48 182 12 Q 212 -8 238 22"); }
+  100% { d: path("M 150 280 Q 80 200 120 120 Q 160 40 200 10 Q 230 -10 250 20"); }
+}
+
+@keyframes floatEmber {
+  0%   { transform: translateY(0px) scale(1);   opacity: 0.7; }
+  50%  { transform: translateY(-40px) scale(1.4); opacity: 0.3; }
+  100% { transform: translateY(0px) scale(1);   opacity: 0.7; }
+}
+
+@keyframes glowPulse {
+  0%, 100% { opacity: 0.35; transform: scale(1); }
+  50%       { opacity: 0.65; transform: scale(1.15); }
+}
+
+@keyframes heroShimmer {
+  0%   { background-position: -200% center; }
+  100% { background-position:  200% center; }
+}
+
+/* Perspective wrapper for 3D depth */
+.hero-3d-scene {
+  perspective: 1200px;
+  perspective-origin: 50% 40%;
+}
+
+/* Text gradient shimmer */
+.gradient-shimmer {
+  background: linear-gradient(
+    90deg,
+    #ff6600 0%,
+    #ffcc00 30%,
+    #ff4400 60%,
+    #ff9900 80%,
+    #ff6600 100%
+  );
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: heroShimmer 4s linear infinite;
+}
+
