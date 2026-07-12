@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import {
   Users, Plus, Trash2, Search, Bell, LogOut, Eye, CreditCard,
   AlertTriangle, CheckCircle, X, IndianRupee, RefreshCw, Settings,
-  Tag, Image as ImageIcon
+  Tag, Image as ImageIcon, MessageSquare
 } from 'lucide-react'
 import {
   getMembers, addMember, deleteMember, updateMember, checkOwnerPassword,
@@ -431,6 +431,14 @@ export default function AdminPage() {
                       </td>
                       <td className="px-4 py-3">
                         <div className="flex items-center gap-2">
+                          {(expd || expir) && (
+                            <a href={`https://wa.me/91${m.phone}?text=${encodeURIComponent(`Hi ${m.name}, your membership at ASTRA FITNESS GYM ${expd ? 'expired on' : 'is expiring on'} ${m.endDate}. Please renew to continue your fitness journey!`)}`}
+                               target="_blank" rel="noopener noreferrer"
+                               title="Send WhatsApp Reminder"
+                               className="p-1.5 rounded-lg text-green-400/60 hover:text-green-400 hover:bg-green-400/10 transition-all">
+                              <MessageSquare size={14} />
+                            </a>
+                          )}
                           <button onClick={() => setViewMember(m)} className="p-1.5 rounded-lg text-white/40 hover:text-white hover:bg-white/10 transition-all"><Eye size={14} /></button>
                           <button onClick={() => setShowPay(m)} className="p-1.5 rounded-lg text-orange-400/60 hover:text-orange-400 hover:bg-orange-400/10 transition-all"><CreditCard size={14} /></button>
                           <button onClick={() => handleDelete(m.id)} className="p-1.5 rounded-lg text-red-400/60 hover:text-red-400 hover:bg-red-400/10 transition-all"><Trash2 size={14} /></button>
