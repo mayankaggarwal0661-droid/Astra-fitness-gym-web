@@ -157,27 +157,7 @@ export function Navbar() {
               boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.1)'
             }}
           >
-            {/* Mobile logo strip */}
-            <div
-              className="flex items-center gap-3 px-6 py-4 border-b border-white/[0.06]"
-            >
-              <div
-                className="relative w-9 h-9 overflow-hidden shrink-0 bg-white"
-                style={{
-                  clipPath: 'polygon(0 0,calc(100% - 5px) 0,100% 5px,100% 100%,5px 100%,0 calc(100% - 5px))',
-                }}
-              >
-                <img
-                  src="/astra-logo.jpg"
-                  alt="ASTRA Logo"
-                  className="w-full h-full object-cover object-center scale-[2.2]"
-                />
-              </div>
-              <div className="leading-none">
-                <p className="text-white font-black uppercase text-base tracking-widest" style={{ fontFamily: "'Barlow Condensed', sans-serif" }}>ASTRA</p>
-                <p className="text-orange-500 text-[8px] uppercase tracking-[0.3em] font-bold">Fitness Gym</p>
-              </div>
-            </div>
+
 
             <div className="px-6 py-5 space-y-1">
               {navLinks.map((link, i) => (
