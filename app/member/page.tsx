@@ -115,7 +115,7 @@ export default function MemberPage() {
         {/* Logo */}
         <div className="flex items-center gap-3 mb-2">
           <div className="w-10 h-10 overflow-hidden" style={{ clipPath: 'polygon(0 0,calc(100% - 6px) 0,100% 6px,100% 100%,6px 100%,0 calc(100% - 6px))', background: 'linear-gradient(135deg,#ff6600,#ff3300)' }}>
-            <img src="/api/gym-image/hanuman" alt="" className="w-full h-full object-cover object-top scale-[2.2] translate-y-[18%]" />
+            <img src="/hanuman.png" alt="" className="w-full h-full object-cover object-top scale-[2.2] translate-y-[18%]" />
           </div>
           <div>
             <p className="text-white font-black uppercase tracking-widest text-lg leading-none" style={{ fontFamily: "'Barlow Condensed',sans-serif" }}>ASTRA</p>
@@ -172,7 +172,7 @@ export default function MemberPage() {
         <div className="max-w-3xl mx-auto px-4 flex items-center justify-between h-16">
           <div className="flex items-center gap-3">
             <div className="w-8 h-8 overflow-hidden" style={{ clipPath: 'polygon(0 0,calc(100% - 5px) 0,100% 5px,100% 100%,5px 100%,0 calc(100% - 5px))', background: 'linear-gradient(135deg,#ff6600,#ff3300)' }}>
-              <img src="/api/gym-image/hanuman" alt="" className="w-full h-full object-cover object-top scale-[2.2] translate-y-[18%]" />
+              <img src="/hanuman.png" alt="" className="w-full h-full object-cover object-top scale-[2.2] translate-y-[18%]" />
             </div>
             <div className="leading-none">
               <p className="text-white font-black uppercase tracking-widest text-base" style={{ fontFamily: "'Barlow Condensed',sans-serif" }}>ASTRA</p>
@@ -222,7 +222,7 @@ export default function MemberPage() {
           className="relative rounded-2xl overflow-hidden mb-6 p-6 border border-white/[0.06]"
           style={{ background: 'linear-gradient(135deg, #1a0800 0%, #0d0400 60%, #050505 100%)' }}>
           <div className="absolute right-0 top-0 bottom-0 w-32 pointer-events-none opacity-10">
-            <img src="/api/gym-image/hanuman" alt="" className="h-full object-cover object-top" />
+            <img src="/hanuman.png" alt="" className="h-full object-cover object-top" />
           </div>
           <div className="absolute inset-0 pointer-events-none" style={{ background: 'radial-gradient(ellipse at 0% 50%, rgba(255,80,0,0.12) 0%, transparent 60%)' }} />
           <div className="relative">

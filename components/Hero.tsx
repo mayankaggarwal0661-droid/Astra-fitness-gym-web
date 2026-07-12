@@ -32,7 +32,7 @@ export function Hero() {
         transition={{ duration: 1.4, ease: 'easeOut' }}
       >
         <img
-          src="/api/gym-image/hanuman"
+          src="/hanuman.png"
           alt="Hanuman Ji"
           className="w-full h-full"
           style={{ objectFit: 'cover', objectPosition: 'center top' }}

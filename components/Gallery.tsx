@@ -6,31 +6,31 @@ import { X, ChevronLeft, ChevronRight } from 'lucide-react'
 
 const galleryPhotos = [
   {
-    src: '/api/gym-image/1',
+    src: '/gallery-1.jpg',
     title: 'Main Training Floor',
     description: 'Spacious main floor packed with premium machines and free weights for full-body workouts.',
     category: 'Equipment',
   },
   {
-    src: '/api/gym-image/2',
+    src: '/gallery-2.jpg',
     title: 'Cardio & Strength Zone',
     description: 'Dedicated zone featuring the iconic Hanuman mural — our symbol of strength and power.',
     category: 'Equipment',
   },
   {
-    src: '/api/gym-image/3',
+    src: '/gallery-3.jpg',
     title: 'Cable & Machine Station',
     description: 'Multi-cable stations with motivational wall art to keep you pushing through every rep.',
     category: 'Training',
   },
   {
-    src: '/api/gym-image/4',
+    src: '/gallery-4.jpg',
     title: 'Treadmill & Cardio Section',
     description: 'Cardio row with treadmills and cross-trainers, surrounded by stunning motivational murals.',
     category: 'Cardio',
   },
   {
-    src: '/api/gym-image/5',
+    src: '/gallery-5.jpg',
     title: 'Power Lifting Area',
     description: 'Heavy-duty squat racks, bench press stations, and barbells for serious strength athletes.',
     category: 'Strength',

@@ -33,7 +33,7 @@ export function Footer() {
               {/* Logo Hexagon */}
               <div className="w-16 h-16 overflow-hidden border border-orange-400 shadow-[0_0_30px_rgba(255,100,0,0.6)] bg-white" 
                    style={{ clipPath: 'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)' }}>
-                <img src="/api/gym-image/logo" alt="Astra Logo" className="w-full h-full object-cover object-center scale-[2.0]" />
+                <img src="/astra-logo.jpg" alt="Astra Logo" className="w-full h-full object-cover object-center scale-[2.0]" />
               </div>
               {/* Label */}
               <div className="mt-1 px-3 py-1 bg-black/90 backdrop-blur-md border border-orange-500/50 rounded shadow-[0_4px_15px_rgba(0,0,0,0.8)]">
