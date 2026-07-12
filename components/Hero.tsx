@@ -108,7 +108,7 @@ export function Hero() {
           {/* Left */}
           <div className="max-w-lg">
             <motion.div
-              className="flex items-center gap-3 mb-5"
+              className="hidden md:flex items-center gap-3 mb-5"
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.3 }}
