@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import {
   Users, Plus, Trash2, Search, Bell, LogOut, Eye, CreditCard,
@@ -70,9 +70,12 @@ export default function AdminPage() {
     }
   }, [authed])
 
-  const showToast = (msg: string) => {
+  const toastTimeoutRef = useRef<NodeJS.Timeout | null>(null)
+
+  const showToast = (msg: string, duration = 3000) => {
     setToast(msg)
-    setTimeout(() => setToast(''), 3000)
+    if (toastTimeoutRef.current) clearTimeout(toastTimeoutRef.current)
+    toastTimeoutRef.current = setTimeout(() => setToast(''), duration)
   }
 
   function login() {
@@ -131,7 +134,7 @@ export default function AdminPage() {
     // Simulate sending OTP
     const otp = Math.floor(1000 + Math.random() * 9000).toString()
     setGeneratedOtp(otp)
-    showToast(`📱 SIMULATED SMS: Your OTP is ${otp}`)
+    showToast(`📱 SIMULATED SMS: Your OTP is ${otp}`, 60000)
     setForgotStep('otp')
   }
 
