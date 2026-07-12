@@ -4,11 +4,11 @@ import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import {
   LogOut, Bell, Dumbbell, User, Target,
-  Flame, Leaf, AlertTriangle, CheckCircle, X, Apple, Coffee, Sun, Moon, Send, Sparkles
+  Flame, Leaf, AlertTriangle, CheckCircle, X, Apple, Coffee, Sun, Moon, Send, Sparkles, MessageSquare
 } from 'lucide-react'
 import {
   getMemberByPhone, updateMember, daysLeft, isExpiringSoon, isExpired,
-  calcBMI, bmiCategory, generateDietPlan, seedDemoData,
+  calcBMI, bmiCategory, generateDietPlan, seedDemoData, getOwnerPhone,
   type Member, type Goal
 } from '@/lib/gymData'
 
@@ -145,7 +145,10 @@ export default function MemberPage() {
   const diet    = generateDietPlan(member)
   const expired = isExpired(member.endDate)
   const expiring = isExpiringSoon(member.endDate)
-  const pct     = Math.max(0, Math.min(100, (dl / { '1month': 30, '3months': 90, '6months': 180, '1year': 365 }[member.membershipType]) * 100))
+  const pct     = Math.max(0, Math.min(100, (dl / { '1month': 30, '3months': 90, '6months': 180, '1year': 365, 'pt': 30, '1day': 1 }[member.membershipType] || 30) * 100))
+  const isPending = member.paymentStatus === 'pending'
+  const ownerPhone = getOwnerPhone() || '941096122'
+  const waLink = `https://wa.me/91${ownerPhone}?text=${encodeURIComponent(`Hi ASTRA FITNESS GYM, my name is ${member.name}. I need to complete the payment for my membership so my dashboard can be activated!`)}`
 
   return (
     <div className="min-h-screen pb-20" style={{ background: '#050505' }}>
@@ -177,7 +180,25 @@ export default function MemberPage() {
 
         {/* Expiry alerts */}
         <AnimatePresence>
-          {expiring && !expired && (
+          {isPending && (
+            <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }}
+              className="mb-4 p-4 rounded-2xl border border-blue-500/30 flex flex-col sm:flex-row sm:items-center justify-between gap-3"
+              style={{ background: 'rgba(59,130,246,0.08)' }}>
+              <div className="flex items-start gap-3">
+                <AlertTriangle size={18} className="text-blue-400 shrink-0 mt-0.5" />
+                <div>
+                  <p className="text-blue-300 font-bold text-sm">Account Pending Payment</p>
+                  <p className="text-blue-300/70 text-xs mt-0.5">Please contact the owner to complete your payment and fully activate your account.</p>
+                </div>
+              </div>
+              <a href={waLink} target="_blank" rel="noopener noreferrer"
+                className="shrink-0 px-4 py-2 bg-blue-500/20 hover:bg-blue-500/30 text-blue-300 rounded-xl text-xs font-bold flex items-center gap-2 transition-colors w-full sm:w-auto justify-center">
+                <MessageSquare size={14} /> Message Owner
+              </a>
+            </motion.div>
+          )}
+
+          {expiring && !expired && !isPending && (
             <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }}
               className="mb-4 p-4 rounded-2xl border border-orange-500/30 flex items-start gap-3"
               style={{ background: 'rgba(255,100,0,0.08)' }}>

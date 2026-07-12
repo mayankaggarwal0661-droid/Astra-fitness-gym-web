@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Check, Star, X, CreditCard } from 'lucide-react'
-import { calcEndDate, addMember, addPayment, type MembershipType, type Goal, type Gender } from '@/lib/gymData'
+import { calcEndDate, addMember, getOwnerPhone, type MembershipType, type Goal, type Gender } from '@/lib/gymData'
 
 const plans: { key: MembershipType, name: string, price: string, numericPrice: number, duration: string, desc: string, popular: boolean, features: string[] }[] = [
   {
@@ -105,7 +105,6 @@ export function MembershipPlans() {
     setErr('')
     setIsProcessing(true)
 
-    // Simulate payment delay for a premium feel
     setTimeout(() => {
       // Local dates to prevent timezone mismatches
       const todayDate = new Date()
@@ -121,22 +120,22 @@ export function MembershipPlans() {
         startDate: todayStr,
         endDate: calcEndDate(todayStr, selectedPlan!.key),
         paymentMode: 'online',
-        paymentStatus: 'paid',
-        active: true,
-        notes: 'Online Registration',
+        paymentStatus: 'pending',
+        active: false,
+        notes: 'Online Registration (Pending Payment)',
         photo: ''
       })
 
-      addPayment({
-        memberId: newMember.id,
-        amount: selectedPlan!.numericPrice,
-        mode: 'online',
-        date: todayStr,
-        note: `Online Checkout: ${selectedPlan!.name}`
-      })
-
-      // Set temporary token and redirect
+      // Set temporary token so they can log in
       sessionStorage.setItem('astra_auto_login', form.phone)
+
+      // Generate WhatsApp link
+      const ownerPhone = getOwnerPhone() || '941096122'
+      const message = `Hi ASTRA FITNESS GYM, I want to purchase the ${selectedPlan!.name} membership for ₹${selectedPlan!.numericPrice.toLocaleString()}.\n\nMy Details:\nName: ${form.name}\nPhone: ${form.phone}\nGoal: ${form.goal}\n\nPlease share the payment details so I can activate my dashboard!`
+      const waLink = `https://wa.me/91${ownerPhone}?text=${encodeURIComponent(message)}`
+
+      // Open WhatsApp in a new tab (if possible) or just redirect
+      window.open(waLink, '_blank')
       window.location.href = '/member'
     }, 1500)
   }
