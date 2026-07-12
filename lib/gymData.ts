@@ -53,6 +53,16 @@ export function checkOwnerPassword(pass: string): boolean {
   return pass === getOwnerPassword()
 }
 
+const OWNER_PHONE_KEY = 'astra_owner_phone'
+export function getOwnerPhone(): string {
+  if (typeof window === 'undefined') return ''
+  return localStorage.getItem(OWNER_PHONE_KEY) || ''
+}
+
+export function setOwnerPhone(phone: string): void {
+  localStorage.setItem(OWNER_PHONE_KEY, phone)
+}
+
 export function getMembers(): Member[] {
   if (typeof window === 'undefined') return []
   const raw = localStorage.getItem(MEMBERS_KEY)

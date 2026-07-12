@@ -9,7 +9,7 @@ import {
 import {
   getMembers, addMember, deleteMember, updateMember, checkOwnerPassword,
   addPayment, getPayments, calcEndDate, daysLeft, isExpiringSoon, isExpired,
-  calcBMI, bmiCategory, seedDemoData, setOwnerPassword,
+  calcBMI, bmiCategory, seedDemoData, setOwnerPassword, getOwnerPhone, setOwnerPhone,
   type Member, type MembershipType, type PaymentMode, type Goal, type Gender
 } from '@/lib/gymData'
 
@@ -49,11 +49,25 @@ export default function AdminPage() {
   const [oldPass, setOldPass]           = useState('')
   const [newPass, setNewPass]           = useState('')
   const [confirmPass, setConfirmPass]   = useState('')
+  const [recoveryPhone, setRecoveryPhone] = useState('')
+
+  // Forgot Password State
+  const [showForgot, setShowForgot]     = useState(false)
+  const [forgotStep, setForgotStep]     = useState<'phone' | 'otp' | 'newpass'>('phone')
+  const [forgotPhone, setForgotPhone]   = useState('')
+  const [generatedOtp, setGeneratedOtp] = useState('')
+  const [enteredOtp, setEnteredOtp]     = useState('')
+  const [forgotNewPass, setForgotNewPass] = useState('')
+  const [forgotConfirmPass, setForgotConfirmPass] = useState('')
 
   const reload = () => setMembers(getMembers())
 
   useEffect(() => {
-    if (authed) { seedDemoData(); reload() }
+    if (authed) { 
+      seedDemoData()
+      reload() 
+      setRecoveryPhone(getOwnerPhone())
+    }
   }, [authed])
 
   const showToast = (msg: string) => {
@@ -93,15 +107,51 @@ export default function AdminPage() {
     reload(); setShowRenew(null); showToast('🔄 Membership Renewed!')
   }
 
-  function handleChangePassword() {
-    if (!checkOwnerPassword(oldPass)) return showToast('❌ Current password is incorrect')
-    if (newPass.length < 6) return showToast('❌ New password must be at least 6 characters')
-    if (newPass !== confirmPass) return showToast('❌ Passwords do not match')
+  function handleSaveSettings() {
+    // If they typed a new password, they must provide the old password
+    if (newPass) {
+      if (!checkOwnerPassword(oldPass)) return showToast('❌ Current password is incorrect')
+      if (newPass.length < 6) return showToast('❌ New password must be at least 6 characters')
+      if (newPass !== confirmPass) return showToast('❌ Passwords do not match')
+      setOwnerPassword(newPass)
+    }
+
+    setOwnerPhone(recoveryPhone)
     
-    setOwnerPassword(newPass)
     setShowSettings(false)
     setOldPass(''); setNewPass(''); setConfirmPass('')
-    showToast('✅ Password changed successfully!')
+    showToast('✅ Settings saved successfully!')
+  }
+
+  function handleForgotSendOtp() {
+    const saved = getOwnerPhone()
+    if (!saved) return showToast('❌ No recovery phone set! Cannot reset password.')
+    if (forgotPhone !== saved) return showToast('❌ Phone number does not match records')
+    
+    // Simulate sending OTP
+    const otp = Math.floor(1000 + Math.random() * 9000).toString()
+    setGeneratedOtp(otp)
+    showToast(`📱 SIMULATED SMS: Your OTP is ${otp}`)
+    setForgotStep('otp')
+  }
+
+  function handleForgotVerifyOtp() {
+    if (enteredOtp !== generatedOtp) return showToast('❌ Incorrect OTP')
+    setForgotStep('newpass')
+    showToast('✅ OTP Verified')
+  }
+
+  function handleForgotResetPass() {
+    if (forgotNewPass.length < 6) return showToast('❌ Password must be at least 6 characters')
+    if (forgotNewPass !== forgotConfirmPass) return showToast('❌ Passwords do not match')
+    setOwnerPassword(forgotNewPass)
+    showToast('✅ Password reset successful!')
+    setShowForgot(false)
+    setForgotStep('phone')
+    setForgotPhone('')
+    setEnteredOtp('')
+    setForgotNewPass('')
+    setForgotConfirmPass('')
   }
 
   const filtered = members.filter(m => {
@@ -123,9 +173,19 @@ export default function AdminPage() {
     revenue:  getPayments().reduce((s, p) => s + p.amount, 0),
   }
 
-  // ── LOGIN SCREEN ─────────────────────────────────────
+  // ── LOGIN / FORGOT PASSWORD SCREEN ─────────────────────────────────────
   if (!authed) return (
-    <div className="min-h-screen flex items-center justify-center" style={{ background: 'radial-gradient(ellipse at 50% 0%, #1a0800, #050505)' }}>
+    <div className="min-h-screen flex items-center justify-center relative" style={{ background: 'radial-gradient(ellipse at 50% 0%, #1a0800, #050505)' }}>
+      {/* Toast */}
+      <AnimatePresence>
+        {toast && (
+          <motion.div initial={{ opacity: 0, y: -40 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -40 }}
+            className="fixed top-6 left-1/2 -translate-x-1/2 z-[999] px-5 py-3 rounded-xl text-white text-sm font-semibold shadow-xl"
+            style={{ background: 'linear-gradient(135deg,#4ade80,#16a34a)' }}>
+            {toast}
+          </motion.div>
+        )}
+      </AnimatePresence>
       <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }}
         className="w-full max-w-sm mx-4 rounded-2xl border border-white/[0.08] p-8 shadow-[0_8px_32px_rgba(0,0,0,0.5)] bg-white/[0.02]"
         style={{ backdropFilter: 'blur(30px) saturate(200%)', WebkitBackdropFilter: 'blur(30px) saturate(200%)' }}
@@ -136,23 +196,69 @@ export default function AdminPage() {
           </div>
           <div>
             <p className="text-white font-black uppercase tracking-widest text-lg" style={{ fontFamily: "'Barlow Condensed',sans-serif" }}>ASTRA</p>
-            <p className="text-orange-500 text-[9px] uppercase tracking-[0.3em] font-bold">Owner Dashboard</p>
+            <p className="text-orange-500 text-[9px] uppercase tracking-[0.3em] font-bold">{showForgot ? 'Reset Password' : 'Owner Dashboard'}</p>
           </div>
         </div>
-        <p className="text-white/40 text-xs mb-6">Enter owner password to continue</p>
-        <input
-          type="password" placeholder="Password" value={pass}
-          onChange={e => setPass(e.target.value)}
-          onKeyDown={e => e.key === 'Enter' && login()}
-          className="w-full px-4 py-3 rounded-xl border text-white text-sm mb-3 outline-none focus:border-orange-500/60 transition-colors"
-          style={{ background: 'rgba(255,255,255,0.04)', borderColor: passErr ? '#f87171' : 'rgba(255,255,255,0.08)' }}
-        />
-        {passErr && <p className="text-red-400 text-xs mb-3">Incorrect password</p>}
-        <button onClick={login} className="w-full py-3 text-white text-sm font-bold uppercase tracking-widest rounded-xl transition-all hover:opacity-90"
-          style={{ background: 'linear-gradient(135deg,#ff6600,#ff3300)' }}>
-          Login as Owner
-        </button>
-        <p className="text-white/20 text-xs text-center mt-4">Default: astra@owner123</p>
+
+        {!showForgot ? (
+          <>
+            <p className="text-white/40 text-xs mb-6">Enter owner password to continue</p>
+            <input
+              type="password" placeholder="Password" value={pass}
+              onChange={e => setPass(e.target.value)}
+              onKeyDown={e => e.key === 'Enter' && login()}
+              className="w-full px-4 py-3 rounded-xl border text-white text-sm mb-3 outline-none focus:border-orange-500/60 transition-colors"
+              style={{ background: 'rgba(255,255,255,0.04)', borderColor: passErr ? '#f87171' : 'rgba(255,255,255,0.08)' }}
+            />
+            {passErr && <p className="text-red-400 text-xs mb-3">Incorrect password</p>}
+            <button onClick={login} className="w-full py-3 text-white text-sm font-bold uppercase tracking-widest rounded-xl transition-all hover:opacity-90 mb-4"
+              style={{ background: 'linear-gradient(135deg,#ff6600,#ff3300)' }}>
+              Login as Owner
+            </button>
+            <div className="text-center">
+              <button onClick={() => setShowForgot(true)} className="text-orange-400 text-xs font-semibold hover:text-orange-300 transition-colors">Forgot Password?</button>
+            </div>
+            <p className="text-white/20 text-xs text-center mt-4">Default: astra@owner123</p>
+          </>
+        ) : (
+          <AnimatePresence mode="wait">
+            {forgotStep === 'phone' && (
+              <motion.div key="phone" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }}>
+                <p className="text-white/40 text-xs mb-6">Enter your registered recovery phone number to receive an OTP.</p>
+                <input type="tel" placeholder="Phone Number" value={forgotPhone} onChange={e => setForgotPhone(e.target.value)}
+                  className="w-full px-4 py-3 rounded-xl border border-white/[0.08] bg-white/[0.04] text-white text-sm mb-4 outline-none focus:border-orange-500/60" />
+                <button onClick={handleForgotSendOtp} className="w-full py-3 text-white text-sm font-bold uppercase tracking-widest rounded-xl transition-all hover:opacity-90 mb-4"
+                  style={{ background: 'linear-gradient(135deg,#ff6600,#ff3300)' }}>Send OTP</button>
+                <div className="text-center">
+                  <button onClick={() => setShowForgot(false)} className="text-white/40 text-xs hover:text-white transition-colors">Cancel</button>
+                </div>
+              </motion.div>
+            )}
+            {forgotStep === 'otp' && (
+              <motion.div key="otp" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }}>
+                <p className="text-white/40 text-xs mb-6">Enter the 4-digit OTP sent to your phone.</p>
+                <input type="text" placeholder="Enter OTP" value={enteredOtp} onChange={e => setEnteredOtp(e.target.value)} maxLength={4}
+                  className="w-full px-4 py-3 rounded-xl border border-white/[0.08] bg-white/[0.04] text-white text-sm mb-4 outline-none focus:border-orange-500/60 text-center tracking-widest font-bold" />
+                <button onClick={handleForgotVerifyOtp} className="w-full py-3 text-white text-sm font-bold uppercase tracking-widest rounded-xl transition-all hover:opacity-90 mb-4"
+                  style={{ background: 'linear-gradient(135deg,#ff6600,#ff3300)' }}>Verify OTP</button>
+                <div className="text-center">
+                  <button onClick={() => setShowForgot(false)} className="text-white/40 text-xs hover:text-white transition-colors">Cancel</button>
+                </div>
+              </motion.div>
+            )}
+            {forgotStep === 'newpass' && (
+              <motion.div key="newpass" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }}>
+                <p className="text-white/40 text-xs mb-6">Create a new owner password.</p>
+                <input type="password" placeholder="New Password" value={forgotNewPass} onChange={e => setForgotNewPass(e.target.value)}
+                  className="w-full px-4 py-3 rounded-xl border border-white/[0.08] bg-white/[0.04] text-white text-sm mb-3 outline-none focus:border-orange-500/60" />
+                <input type="password" placeholder="Confirm New Password" value={forgotConfirmPass} onChange={e => setForgotConfirmPass(e.target.value)}
+                  className="w-full px-4 py-3 rounded-xl border border-white/[0.08] bg-white/[0.04] text-white text-sm mb-4 outline-none focus:border-orange-500/60" />
+                <button onClick={handleForgotResetPass} className="w-full py-3 text-white text-sm font-bold uppercase tracking-widest rounded-xl transition-all hover:opacity-90"
+                  style={{ background: 'linear-gradient(135deg,#4ade80,#16a34a)' }}>Reset Password</button>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        )}
       </motion.div>
     </div>
   )
@@ -709,7 +815,12 @@ export default function AdminPage() {
               </div>
 
               <div className="mb-4">
-                <label className="text-white/40 text-xs uppercase tracking-wide font-bold mb-1.5 block">Current Password</label>
+                <label className="text-white/40 text-xs uppercase tracking-wide font-bold mb-1.5 block">Recovery Phone Number</label>
+                <input type="tel" value={recoveryPhone} onChange={e => setRecoveryPhone(e.target.value)} placeholder="e.g. 9876543210"
+                  className="w-full px-3 py-2.5 rounded-xl border border-white/[0.07] bg-white/[0.03] text-white text-sm outline-none focus:border-orange-500/50" />
+              </div>
+              <div className="mb-4">
+                <label className="text-white/40 text-xs uppercase tracking-wide font-bold mb-1.5 block">Current Password (if changing)</label>
                 <input type="password" value={oldPass} onChange={e => setOldPass(e.target.value)}
                   className="w-full px-3 py-2.5 rounded-xl border border-white/[0.07] bg-white/[0.03] text-white text-sm outline-none focus:border-orange-500/50" />
               </div>
@@ -726,9 +837,9 @@ export default function AdminPage() {
 
               <div className="flex gap-3">
                 <button onClick={() => setShowSettings(false)} className="flex-1 py-3 rounded-xl border border-white/[0.07] text-white/50 text-sm font-semibold hover:border-white/20">Cancel</button>
-                <button onClick={handleChangePassword} className="flex-1 py-3 rounded-xl text-white text-sm font-bold transition-all hover:opacity-90 shadow-lg shadow-orange-500/20"
+                <button onClick={handleSaveSettings} className="flex-1 py-3 rounded-xl text-white text-sm font-bold transition-all hover:opacity-90 shadow-lg shadow-orange-500/20"
                   style={{ background: 'linear-gradient(135deg,#ff6600,#ff3300)' }}>
-                  Save Password
+                  Save Settings
                 </button>
               </div>
             </motion.div>
