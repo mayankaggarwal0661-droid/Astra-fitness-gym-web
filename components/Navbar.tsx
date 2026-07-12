@@ -24,24 +24,6 @@ export function Navbar() {
     { label: 'Contact',    href: '/#contact' },
   ]
 
-  const handleScroll = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
-    // Only handle smooth scroll if we are already on the home page
-    if (window.location.pathname === '/' && href.startsWith('/#')) {
-      e.preventDefault()
-      const targetId = href.substring(2) // remove '/#'
-      const elem = document.getElementById(targetId)
-      if (elem) {
-        const y = elem.getBoundingClientRect().top + window.scrollY - 72 // 72px offset for navbar
-        window.scrollTo({ top: y, behavior: 'smooth' })
-        setIsOpen(false)
-        window.history.pushState(null, '', href)
-      }
-    } else {
-      // If navigating to another page, just close the menu and let default behavior happen
-      setIsOpen(false)
-    }
-  }
-
   const portalLinks = [
     { label: 'Member', href: '/member', color: '#a78bfa' },
   ]
@@ -102,10 +84,9 @@ export function Navbar() {
           {/* ══════════════ DESKTOP NAV ══════════════ */}
           <div className="hidden md:flex items-center gap-7">
             {navLinks.map((link) => (
-              <a
+              <Link
                 key={link.label}
                 href={link.href}
-                onClick={(e) => handleScroll(e, link.href)}
                 className="relative text-white/45 hover:text-white text-[11px] font-bold uppercase tracking-[0.18em] transition-colors duration-200 group py-1"
               >
                 {link.label}
@@ -113,12 +94,11 @@ export function Navbar() {
                   className="absolute bottom-0 left-0 w-0 h-[1.5px] group-hover:w-full transition-all duration-300 rounded"
                   style={{ background: 'linear-gradient(90deg,#ff6600,#ffaa00)' }}
                 />
-              </a>
+              </Link>
             ))}
 
-            <a
+            <Link
               href="/#membership"
-              onClick={(e) => handleScroll(e, '/#membership')}
               className="relative inline-flex items-center gap-2 px-6 py-2.5 text-white text-[11px] font-bold uppercase tracking-widest overflow-hidden transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-orange-500/30 ml-2"
               style={{
                 background: 'linear-gradient(135deg,#ff6600,#ff3300)',
@@ -126,7 +106,7 @@ export function Navbar() {
               }}
             >
               Join Now
-            </a>
+            </Link>
 
             {/* Portal quick-access */}
             <div className="flex gap-1.5 ml-3 pl-3 border-l border-white/[0.08]">
@@ -201,21 +181,25 @@ export function Navbar() {
 
             <div className="px-6 py-5 space-y-1">
               {navLinks.map((link, i) => (
-                <motion.a
+                <Link
                   key={link.label}
                   href={link.href}
-                  initial={{ opacity: 0, x: -16 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: i * 0.06, duration: 0.3 }}
+                  onClick={() => setIsOpen(false)}
                   className="flex items-center gap-3 text-white/50 hover:text-white text-[11px] font-bold uppercase tracking-[0.22em] py-3 border-b border-white/[0.04] hover:border-orange-500/20 transition-all group"
-                  onClick={(e) => handleScroll(e, link.href)}
                 >
-                  <span
-                    className="w-4 h-[1.5px] rounded group-hover:w-6 transition-all duration-300"
-                    style={{ background: 'linear-gradient(90deg,#ff6600,#ffaa00)' }}
-                  />
-                  {link.label}
-                </motion.a>
+                  <motion.div
+                    initial={{ opacity: 0, x: -16 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: i * 0.06, duration: 0.3 }}
+                    className="flex items-center w-full"
+                  >
+                    <span
+                      className="w-4 h-[1.5px] rounded group-hover:w-6 transition-all duration-300 mr-3"
+                      style={{ background: 'linear-gradient(90deg,#ff6600,#ffaa00)' }}
+                    />
+                    {link.label}
+                  </motion.div>
+                </Link>
               ))}
 
               <motion.div
@@ -224,9 +208,9 @@ export function Navbar() {
                 transition={{ delay: navLinks.length * 0.06 }}
                 className="pt-4"
               >
-                <a
+                <Link
                   href="/#membership"
-                  onClick={(e) => handleScroll(e, '/#membership')}
+                  onClick={() => setIsOpen(false)}
                   className="flex items-center justify-center gap-2 py-3.5 text-white text-[11px] font-bold uppercase tracking-widest w-full"
                   style={{
                     background: 'linear-gradient(135deg,#ff6600,#ff3300)',
@@ -235,7 +219,7 @@ export function Navbar() {
                   }}
                 >
                   🔥 Join ASTRA Now
-                </a>
+                </Link>
               </motion.div>
             </div>
           </motion.div>
