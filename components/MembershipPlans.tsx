@@ -130,7 +130,7 @@ export function MembershipPlans() {
       sessionStorage.setItem('astra_auto_login', form.phone)
 
       // Generate WhatsApp link
-      const ownerPhone = getOwnerPhone() || '941096122'
+      const ownerPhone = getOwnerPhone() || '9410964122'
       const message = `Hi ASTRA FITNESS GYM, I want to purchase the ${selectedPlan!.name} membership for ₹${selectedPlan!.numericPrice.toLocaleString()}.\n\nMy Details:\nName: ${form.name}\nPhone: ${form.phone}\nGoal: ${form.goal}\n\nPlease share the payment details so I can activate my dashboard!`
       const waLink = `https://wa.me/91${ownerPhone}?text=${encodeURIComponent(message)}`
 
