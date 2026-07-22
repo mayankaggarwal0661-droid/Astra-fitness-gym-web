@@ -225,7 +225,8 @@ export function generateDietPlan(member: Member): {
   const fat     = Math.round(calories * 0.25 / 9)
   const carbs   = Math.round((calories - protein * 4 - fat * 9) / 4)
 
-  const plans: Record<Goal, typeof meals> = {
+  type Meal = { time: string; name: string; foods: string[]; cal: number }
+  const plans: Record<Goal, Meal[]> = {
     weight_loss: [
       { time: '7:00 AM', name: 'Breakfast', foods: ['2 boiled eggs', 'Oats with skimmed milk', '1 banana', 'Green tea'], cal: Math.round(calories * 0.22) },
       { time: '10:30 AM', name: 'Mid-Morning', foods: ['Handful of almonds (10–12)', '1 apple or pear'], cal: Math.round(calories * 0.08) },

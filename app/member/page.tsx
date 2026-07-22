@@ -145,7 +145,7 @@ export default function MemberPage() {
   const diet    = generateDietPlan(member)
   const expired = isExpired(member.endDate)
   const expiring = isExpiringSoon(member.endDate)
-  const pct     = Math.max(0, Math.min(100, (dl / { '1month': 30, '3months': 90, '6months': 180, '1year': 365, 'pt': 30, '1day': 1 }[member.membershipType] || 30) * 100))
+  const pct     = Math.max(0, Math.min(100, (dl / ({ '1month': 30, '3months': 90, '6months': 180, '1year': 365, 'pt': 30, '1day': 1, 'weight_lifting': 30 } as Record<string, number>)[member.membershipType] || 30) * 100))
   const isPending = member.paymentStatus === 'pending'
   const ownerPhone = getOwnerPhone() || '9410964122'
   const waLink = `https://wa.me/91${ownerPhone}?text=${encodeURIComponent(`Hi ASTRA FITNESS GYM, my name is ${member.name}. I need to complete the payment for my membership so my dashboard can be activated!`)}`

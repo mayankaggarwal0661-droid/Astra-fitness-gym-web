@@ -16,7 +16,7 @@ import {
 } from '@/lib/gymData'
 
 const MEMBERSHIP_PRICE: Record<MembershipType, number> = {
-  '1day': 200, '1month': 1200, '3months': 3000, '6months': 5500, '1year': 9000, 'pt': 2500
+  '1day': 200, '1month': 1200, '3months': 3000, '6months': 5500, '1year': 9000, 'pt': 2500, 'weight_lifting': 1000
 }
 
 const emptyForm = (): Omit<Member, 'id'> => ({
