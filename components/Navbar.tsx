@@ -58,9 +58,9 @@ export function Navbar() {
               }}
             >
               <img
-                src="/astra-logo.jpg"
+                src="/logo-transparent.png"
                 alt="ASTRA Logo"
-                className="w-full h-full object-cover object-center scale-[2.2] group-hover:scale-[2.5] transition-transform duration-500"
+                className="w-full h-full object-contain p-0.5 group-hover:scale-[1.1] transition-transform duration-500"
               />
             </div>
 
