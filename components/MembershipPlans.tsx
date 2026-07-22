@@ -17,6 +17,20 @@ const plans: { key: MembershipType, name: string, price: string, numericPrice: n
     features: ['Full gym access for 1 day', 'Basic fitness assessment', 'Equipment guidance'],
   },
   {
+    key: 'weight_lifting',
+    name: 'Weight Lifting Only',
+    price: '₹1,000',
+    numericPrice: 1000,
+    duration: '30 days',
+    desc: 'No treadmill, just iron',
+    popular: false,
+    features: [
+      'Access to weight lifting section',
+      'No treadmill access',
+      'Website member section access',
+    ],
+  },
+  {
     key: '1month',
     name: '1 Month',
     price: '₹1,200',

@@ -1,5 +1,5 @@
 // ── Types ────────────────────────────────────────────────
-export type MembershipType = '1day' | '1month' | '3months' | '6months' | '1year' | 'pt'
+export type MembershipType = '1day' | '1month' | '3months' | '6months' | '1year' | 'pt' | 'weight_lifting'
 export type PaymentMode    = 'cash' | 'online'
 export type Goal           = 'weight_loss' | 'muscle_gain' | 'maintenance' | 'endurance'
 export type Gender         = 'male' | 'female'
@@ -153,7 +153,7 @@ export function addPayment(p: Omit<Payment, 'id'>): void {
 
 // ── Dates ────────────────────────────────────────────────
 export function membershipDays(type: MembershipType): number {
-  return { '1day': 1, '1month': 30, '3months': 90, '6months': 180, '1year': 365, 'pt': 30 }[type]
+  return { '1day': 1, '1month': 30, '3months': 90, '6months': 180, '1year': 365, 'pt': 30, 'weight_lifting': 30 }[type]
 }
 
 export function calcEndDate(startDate: string, type: MembershipType): string {
