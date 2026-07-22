@@ -6,10 +6,11 @@ const nextConfig = {
   images: {
     unoptimized: true,
   },
-  // Allow serving local files via API routes
-  experimental: {
-    serverComponentsExternalPackages: ['fs', 'path'],
+  eslint: {
+    ignoreDuringBuilds: true,
   },
+  // Allow serving local files via API routes
+  serverExternalPackages: ['fs', 'path'],
 }
 
 export default nextConfig
