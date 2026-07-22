@@ -202,7 +202,7 @@ export default function AdminPage() {
       >
         <div className="flex items-center gap-3 mb-8">
           <div className="w-10 h-10 overflow-hidden rounded" style={{ clipPath: 'polygon(0 0,calc(100% - 6px) 0,100% 6px,100% 100%,6px 100%,0 calc(100% - 6px))', background: 'linear-gradient(135deg,#ff6600,#ff3300)' }}>
-            <img src="/hanuman.png" alt="" className="w-full h-full object-cover object-top scale-[2.2] translate-y-[18%]" />
+            <img src="/logo-transparent.png" alt="Logo" className="w-full h-full object-contain p-1" />
           </div>
           <div>
             <p className="text-white font-black uppercase tracking-widest text-lg" style={{ fontFamily: "'Barlow Condensed',sans-serif" }}>ASTRA</p>
@@ -292,7 +292,7 @@ export default function AdminPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-16">
           <div className="flex items-center gap-3">
             <div className="w-8 h-8 overflow-hidden" style={{ clipPath: 'polygon(0 0,calc(100% - 5px) 0,100% 5px,100% 100%,5px 100%,0 calc(100% - 5px))', background: 'linear-gradient(135deg,#ff6600,#ff3300)' }}>
-              <img src="/hanuman.png" alt="" className="w-full h-full object-cover object-top scale-[2.2] translate-y-[18%]" />
+              <img src="/logo-transparent.png" alt="Logo" className="w-full h-full object-contain p-1" />
             </div>
             <div>
               <p className="text-white font-black uppercase tracking-widest text-base leading-none" style={{ fontFamily: "'Barlow Condensed',sans-serif" }}>ASTRA</p>
